@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control</title>
+</head>
+<body>
+    <ul class="zoneList">
+        <li class="zone">
+            <p>Zone 1</p>
+        </li>
+        <li class="zone">
+            <p>Zone 2</p>
+        </li>
+        <li class="zone">
+            <p>Zone 3</p>
+        </li>
+        <li class="zone">
+            <p>Zone 4</p>
+        </li>
+    </ul>
+    <button type="button" class="control" onclick="start()">Start</button>
+    <button type="button" class="control" onclick="end()">End Round</button>
+    <p id="log"></p>
+</body>
+<style>
+    .control {
+        width: 200px;
+        height: 80px;
+        background-color: #ddd;
+        border-color: #000;
+        border-width: 1px;
+        border-radius: 10px;
+    }
+
+    .control:hover {
+        background-color: #fff;
+    }
+
+    .control:active {
+        background-color: #999;
+    }
+
+    .zoneList {
+        list-style: none;
+        margin: 5px;
+        padding: 0px;
+    }
+
+    .zone {
+        border: 2px solid #000;
+        border-bottom: none;
+        padding: 5px;
+    }
+
+    .zone:last-child {
+        border-bottom: 2px solid #000;
+    }
+</style>
+<script type="text/javascript" charset="utf-8">
+    const ws = new WebSocket(`ws://${location.host}/`);
+    ws.addEventListener("message", function (event) {
+        document.getElementById("log").textContent = event.data;
+    });
+
+    function start() {
+        ws.send("start");
+    };
+
+    function end() {
+        ws.send("end");
+    };
+</script>
+</html>

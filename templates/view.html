@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+<h1 id="gameState"></h1>
+<div id="stream_div">
+<canvas id="zone1" width="1280" height="720" class="stream"></canvas>
+<canvas id="zone2" width="1280" height="720" class="stream"></canvas>
+<canvas id="zone3" width="1280" height="720" class="stream"></canvas>
+<canvas id="zone4" width="1280" height="720" class="stream"></canvas>
+</div>
+</body>
+<script>
+    const ws = new WebSocket(`ws://${location.host}/banner`);
+    ws.addEventListener("message", function (event) {
+        document.getElementById("gameState").textContent = event.data;
+    });
+
+    const zone1_canvas = document.getElementById("zone1");
+    const zone1_context = zone1_canvas.getContext("2d");
+    const zone1_video_stream = new WebSocket(`ws://${location.host}/stream/zone1`);
+    zone1_video_stream.binaryType = "blob";
+    zone1_video_stream.addEventListener("message", function (event) {
+        createImageBitmap(event.data)
+            .then((bitmap) => zone1_context.drawImage(bitmap, 0, 0, 1280, 720));
+    });
+
+    const zone2_canvas = document.getElementById("zone2");
+    const zone2_context = zone2_canvas.getContext("2d");
+    const zone2_video_stream = new WebSocket(`ws://${location.host}/stream/zone2`);
+    zone2_video_stream.binaryType = "blob";
+    zone2_video_stream.addEventListener("message", function (event) {
+        createImageBitmap(event.data)
+            .then((bitmap) => zone2_context.drawImage(bitmap, 0, 0, 1280, 720));
+    });
+
+    const zone3_canvas = document.getElementById("zone3");
+    const zone3_context = zone3_canvas.getContext("2d");
+    const zone3_video_stream = new WebSocket(`ws://${location.host}/stream/zone3`);
+    zone3_video_stream.binaryType = "blob";
+    zone3_video_stream.addEventListener("message", function (event) {
+        createImageBitmap(event.data)
+            .then((bitmap) => zone3_context.drawImage(bitmap, 0, 0, 1280, 720));
+    });
+
+    const zone4_canvas = document.getElementById("zone4");
+    const zone4_context = zone4_canvas.getContext("2d");
+    const zone4_video_stream = new WebSocket(`ws://${location.host}/stream/zone4`);
+    zone4_video_stream.binaryType = "blob";
+    zone4_video_stream.addEventListener("message", function (event) {
+        createImageBitmap(event.data)
+            .then((bitmap) => zone4_context.drawImage(bitmap, 0, 0, 1280, 720));
+    });
+</script>
+<style>
+    .stream {
+        width: 100%;
+    }
+
+    #stream_div {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .stream {
+        display: inline-grid;
+    }
+</style>
+</html>

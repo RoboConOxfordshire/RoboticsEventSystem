@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+<h1 id="gameState"></h1>
+<img id="log_img" src="http://{{ ip }}/static/image.jpg" width="60%">
+<pre id="log_text"></pre>
+</body>
+<script>
+    const ws = new WebSocket(`ws://${location.host}/banner`);
+    ws.addEventListener("message", function (event) {
+        document.getElementById("gameState").textContent = event.data;
+    });
+
+    img = document.getElementById("log_img");
+    img_url = "http://{{ ip }}/static/image.jpg";
+    text = document.getElementById("log_text");
+    text_url = "http://{{ ip }}/run/output"
+    function update() {
+        fetch(img_url, {cache: "reload"})
+            .then(() => img.src = img_url);
+
+        fetch(text_url, {cache: "reload"})
+            .then((response) => response.text())
+            .then((content) => text.textContent = content);
+    };
+
+    update();
+    var interval_id = window.setInterval(update, 1000);
+</script>
+</html>
