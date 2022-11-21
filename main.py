@@ -5,8 +5,6 @@ import aiohttp
 import base64
 import functools
 
-from PIL import Image
-
 
 app = Quart(__name__)
 
