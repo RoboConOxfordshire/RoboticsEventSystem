@@ -22,10 +22,10 @@ view_connections = set()
 terminating = False
 
 
-ip_dict = {"zone1": "192.168.4.1",
-           "zone2": "0.0.0.0",
-           "zone3": "0.0.0.0",
-           "zone4": "0.0.0.0"}
+ip_dict = {"zone1": "192.168.88.242",
+           "zone2": "192.168.88.243",
+           "zone3": "192.168.88.244",
+           "zone4": "192.168.88.245"}
 
 conn_dict = {"zone1": set(),
              "zone2": set(),
@@ -57,7 +57,7 @@ async def source_images(zone):
             try:
                 async with session.get(url, timeout=1) as resp:
                     msg = await resp.text()
-                img_bytes = base64.a85decode(msg)
+                img_bytes = base64.b85decode(msg)
                 for conn in conn_dict[zone]:
                     await conn.put(img_bytes)
             except (asyncio.TimeoutError, aiohttp.client_exceptions.ClientConnectionError):
@@ -177,8 +177,8 @@ async def stream(zone):
 async def startup():
     app.add_background_task(game_loop)
     app.add_background_task(functools.partial(source_images, "zone1"))
-    # app.add_background_task(functools.partial(source_images, "zone2"))
-    # app.add_background_task(functools.partial(source_images, "zone3"))
+    app.add_background_task(functools.partial(source_images, "zone2"))
+    app.add_background_task(functools.partial(source_images, "zone3"))
     # app.add_background_task(functools.partial(source_images, "zone4"))
 
 
