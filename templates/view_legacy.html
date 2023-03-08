@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View</title>
+</head>
+<body>
+<h1 id="gameState"></h1>
+<div id="stream_div">
+<img id="log_img_1" src="http://{{ ip1 }}/static/image.jpg" class="stream">
+<img id="log_img_2" src="http://{{ ip2 }}/static/image.jpg" class="stream">
+<img id="log_img_3" src="http://{{ ip3 }}/static/image.jpg" class="stream">
+<img id="log_img_4" src="http://{{ ip4 }}/static/image.jpg" class="stream">
+</div>
+</body>
+<script>
+    const ws = new WebSocket(`ws://${location.host}/banner`);
+    ws.addEventListener("message", function (event) {
+        document.getElementById("gameState").textContent = event.data;
+    });
+    img_1 = document.getElementById("log_img_1");
+    img_2 = document.getElementById("log_img_2");
+    img_3 = document.getElementById("log_img_3");
+    img_4 = document.getElementById("log_img_4");
+    img_url_1 = "http://{{ ip1 }}/static/image.jpg";
+    img_url_2 = "http://{{ ip2 }}/static/image.jpg";
+    img_url_3 = "http://{{ ip3 }}/static/image.jpg";
+    img_url_4 = "http://{{ ip4 }}/static/image.jpg";
+    function update_1() {
+        fetch(img_url_1, {cache: "reload"})
+            .then(() => img_1.src = img_url_1);
+    };
+    function update_2() {
+        fetch(img_url_2, {cache: "reload"})
+            .then(() => img_2.src = img_url_2);
+    };
+    function update_3() {
+        fetch(img_url_3, {cache: "reload"})
+            .then(() => img_3.src = img_url_3);
+    };
+    function update_4() {
+        fetch(img_url_4, {cache: "reload"})
+            .then(() => img_4.src = img_url_4);
+    };
+
+    update_1();
+    var interval_id = window.setInterval(update_1, 1000);
+    update_2();
+    var interval_id = window.setInterval(update_2, 1000);
+    update_3();
+    var interval_id = window.setInterval(update_3, 1000);
+    update_4();
+    var interval_id = window.setInterval(update_4, 1000);
+</script>
+<style>
+    .stream {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+
+    #stream_div {
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .stream {
+        display: inline-grid;
+    }
+</style>
+</html>

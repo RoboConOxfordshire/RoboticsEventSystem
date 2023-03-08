@@ -6,6 +6,9 @@ import base64
 import functools
 
 
+LEGACY = True
+
+
 app = Quart(__name__)
 
 
@@ -149,6 +152,9 @@ async def send_header(message):
 
 @app.route("/view")
 async def view():
+    if LEGACY:
+        return await render_template("view_legacy.html", ip1=ip_dict["zone1"], ip2=ip_dict["zone2"],
+                                     ip3=ip_dict["zone3"], ip4=ip_dict["zone4"])
     return await render_template("view.html")
 
 
@@ -176,10 +182,11 @@ async def stream(zone):
 @app.before_serving
 async def startup():
     app.add_background_task(game_loop)
-    app.add_background_task(functools.partial(source_images, "zone1"))
-    app.add_background_task(functools.partial(source_images, "zone2"))
-    app.add_background_task(functools.partial(source_images, "zone3"))
-    # app.add_background_task(functools.partial(source_images, "zone4"))
+    if not LEGACY:
+        app.add_background_task(functools.partial(source_images, "zone1"))
+        app.add_background_task(functools.partial(source_images, "zone2"))
+        app.add_background_task(functools.partial(source_images, "zone3"))
+        app.add_background_task(functools.partial(source_images, "zone4"))
 
 
 @app.after_serving
